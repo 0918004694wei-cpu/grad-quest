@@ -1,23 +1,19 @@
 import { access, rm } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 
-await rm('dist/client', { recursive: true, force: true });
+await rm('pages-dist', { recursive: true, force: true });
 
-const result = spawnSync(process.execPath, ['node_modules/vinext/dist/cli.js', 'build'], {
+const result = spawnSync(process.execPath, ['node_modules/vite/bin/vite.js', 'build', '--config', 'vite.pages.config.ts'], {
   stdio: 'inherit',
-  env: { ...process.env, GITHUB_PAGES: 'true' },
+  env: process.env,
 });
 
-let hasStaticEntry = true;
-try {
-  await access('dist/client/index.html');
-} catch {
-  hasStaticEntry = false;
-}
+if (result.status !== 0) process.exit(result.status || 1);
 
-const windowsShutdownOnly = process.platform === 'win32' && result.status !== 0 && hasStaticEntry;
-if (result.status !== 0 && !windowsShutdownOnly) process.exit(result.status || 1);
-if (!hasStaticEntry) throw new Error('Static export did not produce dist/client/index.html.');
-if (windowsShutdownOnly) console.warn('Vinext completed the static export before a Windows shutdown assertion; verified output will be used.');
+try {
+  await access('pages-dist/index.html');
+} catch {
+  throw new Error('GitHub Pages build did not produce pages-dist/index.html.');
+}
 
 await import('./prepare-pages.mjs');

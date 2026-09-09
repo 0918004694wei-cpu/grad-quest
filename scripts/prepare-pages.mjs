@@ -1,12 +1,8 @@
-import { access, copyFile, cp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { access, copyFile, writeFile } from 'node:fs/promises';
 
-const source = 'dist/client';
 const output = 'pages-dist';
 
-await access(`${source}/index.html`);
-await rm(output, { recursive: true, force: true });
-await mkdir(output, { recursive: true });
-await cp(source, output, { recursive: true });
+await access(`${output}/index.html`);
 await copyFile(`${output}/index.html`, `${output}/404.html`);
 await writeFile(`${output}/.nojekyll`, '');
 
