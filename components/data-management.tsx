@@ -69,7 +69,7 @@ export function DataManagement({ exportData, importData, clearData }: {
       <div className="danger-zone data-danger">
         <div><RotateCcw size={18}/><span><b>清除所有本機資料</b><small>刪除目前進度並回到 2026/09/08 的初始任務與課表。</small></span></div>
         <AlertDialog>
-          <AlertDialogTrigger render={<button className="danger" />}>清除資料</AlertDialogTrigger>
+          <AlertDialogTrigger render={<button className="danger" aria-label="清除所有本機資料" />}>清除資料</AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>確定要清除所有本機資料？</AlertDialogTitle>
